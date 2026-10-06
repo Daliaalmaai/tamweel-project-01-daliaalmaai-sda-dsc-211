@@ -1,187 +1,244 @@
-<div align="center">
+# Tamweel Lite — Financing Default Risk
 
-# SDA-DSC-211 · Advanced Machine Learning Methods  
-# أساليب تعلم الآلة المتقدمة
+An educational machine learning project for estimating the probability
+of default within 90 days after a financing application, using information
+available at application time.
 
-**Tamweel Lite student project | مشروع المتدرب Tamweel Lite**
+**Course:** SDA-DSC-211 — Advanced Machine Learning Methods  
+**Project type:** Individual learner project  
+**Current stage:** Day 1 — Baseline and boosting comparison completed  
+**Initial candidate:** XGBoost, subject to further validation
 
-[Learning portal](https://almiyead-rgb.github.io/advanced-machine-learning-methods-sda-dsc-211/) · [Arabic portal](https://almiyead-rgb.github.io/advanced-machine-learning-methods-sda-dsc-211/ar.html) · [English portal](https://almiyead-rgb.github.io/advanced-machine-learning-methods-sda-dsc-211/en.html)
+> This project uses synthetic course data. It must not be used to make
+> real financing decisions. This is a learner repository, not an official
+> SDAIA repository.
 
-[![Environment Check](https://github.com/almiyead-rgb/sda-dsc-211-student-template/actions/workflows/validate.yml/badge.svg)](https://github.com/almiyead-rgb/sda-dsc-211-student-template/actions/workflows/validate.yml)
-[![Notebook Smoke Test](https://github.com/almiyead-rgb/sda-dsc-211-student-template/actions/workflows/notebook_smoke.yml/badge.svg)](https://github.com/almiyead-rgb/sda-dsc-211-student-template/actions/workflows/notebook_smoke.yml)
-[![Bilingual Content Check](https://github.com/almiyead-rgb/sda-dsc-211-student-template/actions/workflows/bilingual_content_check.yml/badge.svg)](https://github.com/almiyead-rgb/sda-dsc-211-student-template/actions/workflows/bilingual_content_check.yml)
+[Executed Day 1 notebook](notebooks/01_baseline_boosting.ipynb) ·
+[Model comparison](artifacts/day1_model_comparison.csv) ·
+[Written decision](artifacts/day1_reflection.json)
 
-</div>
+## Project Overview
 
-<!-- BILINGUAL:EN -->
-<!-- BILINGUAL:AR -->
+The project investigates whether machine learning models can estimate
+90-day default risk from application-time features.
 
-<table>
-<tr>
-<td width="50%" valign="top" dir="ltr">
+The five-day workflow progressively adds validation, decision analysis,
+interpretation, calibration, and final documentation.
 
-## Your project workspace
+Day 1 establishes a reproducible baseline and compares Logistic Regression,
+XGBoost, and LightGBM. The objective is to select an initial candidate
+using evidence rather than model complexity or reputation.
 
-Use this template to build one connected project across five days. Select **Use this template → Create a new repository**, then keep your notebooks, reports, evidence and final presentation in your own repository.
+## Project Progress
 
-The status badges above check the template and automated workflows. A green badge does not award a grade and does not prove that your individual project is complete.
+| Stage | Focus | Status |
+|---|---|---|
+| Readiness | Environment and data checks | Completed |
+| Day 1 | Baseline and boosting comparison | Completed |
+| Day 2 | Customer-aware and time-aware validation; tuning | Planned |
+| Day 3 | Class imbalance and decision costs | Planned |
+| Day 4 | Interpretation and calibration | Planned |
+| Day 5 | Ensembles, Model Card, and final delivery | Planned |
 
-</td>
-<td width="50%" valign="top" dir="rtl">
+## Dataset and Prediction Task
 
-## مساحة مشروعك
+All records are synthetic.
 
-استخدم هذا القالب لبناء مشروع واحد مترابط خلال خمسة أيام. اختر **Use this template → Create a new repository**، ثم احفظ دفاترك وتقاريرك وأدلتك وعرضك النهائي في مستودعك الخاص بالمشروع.
+| Item | Value |
+|---|---|
+| Training applications | 10,000 |
+| Model predictors | 22 |
+| Target | `default_within_90d` |
+| Overall default prevalence | 7.89% |
+| Missing feature cells | 766 |
+| Prediction time | At application submission |
 
-تفحص مؤشرات الحالة أعلاه القالب ومسارات الأتمتة. لا يمنح اللون الأخضر درجة ولا يثبت اكتمال مشروعك الفردي.
+The target records whether a default event occurs within 90 days after
+the application. It does not mean a delay of exactly 90 days.
 
-</td>
-</tr>
-</table>
+Identifiers, dates, split-control columns, and the target are excluded
+from model inputs. Challenge data is not used in the Day 1 comparison.
 
-## Start here | ابدأ هنا
+## Day 1 Technical Pipeline
 
-<table>
-<tr>
-<td width="50%" valign="top" dir="ltr">
+1. Prepare the free CPU environment and verify pinned course files.
+2. Load and inspect the synthetic training data.
+3. Separate development, internal selection, and comparison roles.
+4. Fit a Logistic Regression baseline using a preprocessing pipeline.
+5. Select boosting tree counts using inner-stop log loss.
+6. Refit the boosting models on all development rows.
+7. Evaluate all three models on the same comparison rows.
+8. Export predictions, metrics, figures, split membership, and reflection.
 
-1. Read [START_HERE.md](START_HERE.md).
-2. Complete the [readiness guide](READINESS_GUIDE.md).
-3. Open [Notebook 00 in Colab](https://colab.research.google.com/github/almiyead-rgb/sda-dsc-211-student-template/blob/main/notebooks/00_readiness_check.ipynb).
-4. Save a copy of each notebook in your own repository before editing it.
-5. Keep code, reports and actual output files; screenshots alone are not sufficient evidence.
+### Data Roles
 
-**Required accounts:** a free Google account for Colab and a free GitHub account for project storage.
+| Role | Applications | Purpose |
+|---|---:|---|
+| Inner fit | 6,000 | Fit preprocessing and trees during tree-count selection |
+| Inner stop | 2,000 | Select the tree count using log loss |
+| Development | 8,000 | Fit or refit models after internal decisions are fixed |
+| Comparison | 2,000 | Evaluate the fitted models |
 
-</td>
-<td width="50%" valign="top" dir="rtl">
+Inner fit and inner stop are subsets of development, not additional data.
+The comparison set is not used for early stopping or tree-count selection.
 
-1. اقرأ [START_HERE.md](START_HERE.md).
-2. أكمل [دليل الاستعداد](READINESS_GUIDE.md).
-3. افتح [دفتر 00 في Colab](https://colab.research.google.com/github/almiyead-rgb/sda-dsc-211-student-template/blob/main/notebooks/00_readiness_check.ipynb).
-4. احفظ نسخة من كل دفتر داخل مستودعك قبل تعديله.
-5. احتفظ بالكود والتقارير وملفات المخرجات الفعلية؛ لا تكفي لقطات الشاشة وحدها كدليل.
+### Baseline and Boosting
 
-**الحسابات المطلوبة:** حساب Google مجاني لفتح Colab وحساب GitHub مجاني لحفظ المشروع.
+The Logistic Regression baseline uses median imputation, feature scaling,
+and classification in a single pipeline. Learned preprocessing values
+come from development rows only.
 
-</td>
-</tr>
-</table>
+For boosting, tree-count selection uses the internal split, followed by
+refitting on all development rows.
 
-## Five-day build | البناء خلال خمسة أيام
+| Model | Selected trees | Evaluated rounds |
+|---|---:|---:|
+| XGBoost | 61 | 91 |
+| LightGBM | 41 | 71 |
 
-| Day | English focus and evidence | المحور والدليل بالعربية | Lab |
-|---:|---|---|---|
-| 1 | Baseline, XGBoost and LightGBM; model comparison and learner observations | خط الأساس وXGBoost وLightGBM؛ مقارنة النماذج وملاحظات المتدرب | [Colab](https://colab.research.google.com/github/almiyead-rgb/sda-dsc-211-student-template/blob/main/notebooks/01_baseline_boosting.ipynb) · [Guide](DAY1_GUIDE.md) |
-| 2 | Honest validation, leakage control and bounded Optuna search; validation evidence | التحقق الصادق ومنع التسرب والبحث المحدود بـOptuna؛ أدلة التحقق | [Colab](https://colab.research.google.com/github/almiyead-rgb/sda-dsc-211-student-template/blob/main/notebooks/02_validation_tuning.ipynb) · [Guide](DAY2_GUIDE.md) |
-| 3 | Imbalance, OOF probabilities, simulated decision cost and capacity; Decision Card | عدم التوازن واحتمالات OOF وتكلفة القرار التعليمية والسعة؛ بطاقة القرار | [Colab](https://colab.research.google.com/github/almiyead-rgb/sda-dsc-211-student-template/blob/main/notebooks/03_cost_sensitive_decision.ipynb) · [Guide](DAY3_GUIDE.md) |
-| 4 | Permutation importance, SHAP, calibration and stability; interpretation report | أهمية التبديل وSHAP والمعايرة والاستقرار؛ تقرير التفسير | [Colab](https://colab.research.google.com/github/almiyead-rgb/sda-dsc-211-student-template/blob/main/notebooks/04_explain_calibrate.ipynb) · [Guide](DAY4_GUIDE.md) |
-| 5 | Averaging, stacking, worth-it decision, Model Card and final package | المتوسطات والتكديس وقرار الجدوى وبطاقة النموذج والحزمة النهائية | [Colab](https://colab.research.google.com/github/almiyead-rgb/sda-dsc-211-student-template/blob/main/notebooks/05_final_model.ipynb) · [Guide](DAY5_GUIDE.md) |
+Neither model reached the 300-tree search ceiling.
 
-## Repository map | خريطة المستودع
+## Key Results — Day 1
 
-<table>
-<tr>
-<td width="50%" valign="top" dir="ltr">
+Evaluation used 2,000 comparison applications, including 158 defaults
+(7.9% prevalence).
 
-- `notebooks/` — executed daily notebooks
-- `artifacts/` — CSV, JSON, figures and model evidence
-- `reports/` — Decision Card, interpretation report, ensemble decision and Model Card
-- `submission/` — final predictions and manifest
-- `presentation/` — five-slide presentation and final PDF
-- `tamweel/` — reproducible inference interface
-- `scripts/` — setup, checks and rebuild tools
-- `data/` — synthetic course data and data contract
+| Model | ROC-AUC | Average Precision | Training time (s) | Selected trees |
+|---|---:|---:|---:|---:|
+| Logistic Regression | **0.8213** | 0.3258 | **0.0386** | Not applicable |
+| XGBoost | 0.8124 | **0.3338** | 0.3610 | 61 |
+| LightGBM | 0.8138 | 0.3248 | 0.2556 | 41 |
 
-</td>
-<td width="50%" valign="top" dir="rtl">
+Training time includes tree-count selection and refitting for boosting,
+and fitting for Logistic Regression. Download and plotting time are
+excluded. These timings describe this run, not a hardware guarantee.
 
-- `notebooks/` — دفاتر الأيام المنفذة
-- `artifacts/` — ملفات CSV وJSON والرسوم وأدلة النموذج
-- `reports/` — بطاقة القرار وتقرير التفسير وقرار التجميع وبطاقة النموذج
-- `submission/` — التنبؤات النهائية والـManifest
-- `presentation/` — قالب العرض والعرض النهائي من خمس شرائح
-- `tamweel/` — واجهة استدلال قابلة لإعادة الإنتاج
-- `scripts/` — أدوات الإعداد والفحص وإعادة البناء
-- `data/` — بيانات الدورة الاصطناعية وعقد البيانات
+In this course, PR-AUC refers to scikit-learn Average Precision,
+not trapezoidal integration of the precision–recall curve.
 
-</td>
-</tr>
-</table>
+[Full comparison table](artifacts/day1_model_comparison.csv) ·
+[Comparison predictions](artifacts/day1_comparison_predictions.csv)
 
-## Assessment | التقييم
+## Initial Model-Selection Decision
 
-<table>
-<tr>
-<td width="50%" valign="top" dir="ltr">
+XGBoost was selected as an initial candidate because it achieved the
+highest Average Precision: 0.3338 versus 0.3258 for Logistic Regression.
 
-- **Project technical and administrative requirements:** 90 points
-- **Presentation and discussion:** 10 points
-- **Pass:** 70 / 100
-- **Distinction:** 95 / 100
+The improvement was modest at 0.0080. Logistic Regression was faster
+and achieved a higher ROC-AUC, making it a strong competing baseline.
 
-Read [RUBRIC.md](RUBRIC.md). High model performance alone is not enough; validation quality, reproducibility, interpretation and decision reasoning are assessed.
+This selection is provisional. If XGBoost's AP advantage disappears
+under customer-aware and time-aware validation, Logistic Regression
+may be preferred for its simplicity and faster training.
 
-</td>
-<td width="50%" valign="top" dir="rtl">
+## Visual Evidence
 
-- **المتطلبات التقنية والإدارية للمشروع:** 90 درجة
-- **العرض والمناقشة:** 10 درجات
-- **النجاح:** 70 من 100
-- **التميز:** 95 من 100
+### Learning Curves
 
-اقرأ [RUBRIC.md](RUBRIC.md). لا يكفي ارتفاع أداء النموذج؛ يُقيّم التحقق وقابلية إعادة الإنتاج والتفسير ومنطق القرار.
+Training loss continued to decline after inner-stop loss stopped
+improving. Tree counts were selected using the internal rows only.
 
-</td>
-</tr>
-</table>
+![Day 1 learning curves](artifacts/day1_learning_curves.png)
 
-## Final verification and submission | الفحص والتسليم النهائي
+### ROC and Precision–Recall
 
-<table>
-<tr>
-<td width="50%" valign="top" dir="ltr">
+The curves are close and intersect. No model dominates across all
+operating points. The precision reference line represents the
+comparison prevalence of 7.9%.
 
-1. Complete all learner responses and reports.
-2. Run [Notebook 99](https://colab.research.google.com/github/almiyead-rgb/sda-dsc-211-student-template/blob/main/notebooks/99_final_submission_check.ipynb).
-3. Correct issues in the original files and rerun the check.
-4. Run **Actions → Final Project Check** in your repository.
-5. Create a final tag on the exact checked commit.
-6. Submit the repository URL, final tag, full commit SHA, check URL and presentation through the private cohort channel.
+![Day 1 ROC and precision–recall curves](artifacts/day1_roc_pr.png)
 
-Technical readiness is not a grade or a submission receipt.
+## Interpretation and Limitations
 
-</td>
-<td width="50%" valign="top" dir="rtl">
+- Accuracy alone is unsuitable as the headline metric: predicting
+  non-default for every application would achieve approximately 92%
+  accuracy while detecting no defaults.
+- AP is considered alongside ROC-AUC because defaults are uncommon.
+- There are 1,226 customers shared between development and comparison.
+- The random split does not fully address customer overlap, temporal
+  leakage, or target-maturity boundaries.
+- This single split provides no confidence interval and does not
+  establish general model superiority.
+- These results do not establish probability calibration or operational
+  financing value.
+- Day 1 does not select a final approval, review, or rejection threshold.
 
-1. أكمل جميع إجابات المتدرب والتقارير.
-2. شغّل [دفتر 99](https://colab.research.google.com/github/almiyead-rgb/sda-dsc-211-student-template/blob/main/notebooks/99_final_submission_check.ipynb).
-3. صحح الملاحظات في الملفات الأصلية ثم أعد الفحص.
-4. شغّل **Actions → Final Project Check** داخل مستودعك.
-5. أنشئ Tag نهائيًا على Commit نفسه الذي اجتاز الفحص.
-6. أرسل رابط المستودع وTag النهائي وCommit SHA الكامل ورابط الفحص والعرض عبر القناة الخاصة للدفعة.
+## Reproducibility
 
-الجاهزية التقنية ليست درجة ولا إيصال استلام.
+| Setting | Value |
+|---|---|
+| Runtime | Google Colab, free CPU |
+| Python | 3.13.16 |
+| Seed | 211 |
+| CPU threads | 2 |
+| Mode | `FAST_MODE=True` |
+| Maximum boosting trees | 300 |
+| Early-stopping patience | 30 |
+| Learning rate | 0.05 |
+| XGBoost depth | 3 |
+| LightGBM leaves | 15 |
+| LightGBM minimum child samples | 50 |
 
-</td>
-</tr>
-</table>
+Package versions are recorded in
+[environment.json](artifacts/environment.json).
 
-## Guides and support | الأدلة والدعم
+Run configuration, file hashes, selection curves, and split summaries
+are recorded in [day1_run.json](artifacts/day1_run.json).
 
-| Need | Resource | الاحتياج | المرجع |
-|---|---|---|---|
-| Colab | [COLAB_GUIDE.md](COLAB_GUIDE.md) | استخدام Colab | [دليل Colab](COLAB_GUIDE.md) |
-| GitHub | [GITHUB_GUIDE.md](GITHUB_GUIDE.md) | حفظ المشروع في GitHub | [دليل GitHub](GITHUB_GUIDE.md) |
-| Requirements | [TECHNICAL_REQUIREMENTS.md](TECHNICAL_REQUIREMENTS.md) · [ADMINISTRATIVE_REQUIREMENTS.md](ADMINISTRATIVE_REQUIREMENTS.md) | المتطلبات | [التقنية](TECHNICAL_REQUIREMENTS.md) · [الإدارية](ADMINISTRATIVE_REQUIREMENTS.md) |
-| Submission | [SUBMISSION_GUIDE.md](SUBMISSION_GUIDE.md) · [FINAL_CHECK_GUIDE.md](FINAL_CHECK_GUIDE.md) | التسليم والفحص | [دليل التسليم](SUBMISSION_GUIDE.md) · [دليل الفحص](FINAL_CHECK_GUIDE.md) |
-| Terms | [GLOSSARY.md](GLOSSARY.md) | المصطلحات | [القاموس](GLOSSARY.md) |
-| Troubleshooting | [TROUBLESHOOTING.md](TROUBLESHOOTING.md) · [FAQ.md](FAQ.md) | حل المشكلات | [حل المشكلات](TROUBLESHOOTING.md) · [الأسئلة الشائعة](FAQ.md) |
-| Learning resources | [LEARNING_RESOURCES.md](LEARNING_RESOURCES.md) | الفيديوهات والمراجع | [الموارد التعليمية](LEARNING_RESOURCES.md) |
+### Run the Day 1 Notebook
 
-> Do not place personal data, passwords, access tokens, private grades or submission receipts in a public repository.  
-> لا تضع بيانات شخصية أو كلمات مرور أو رموز وصول أو درجات خاصة أو إيصالات تسليم داخل مستودع عام.
+1. Open [the executed notebook](notebooks/01_baseline_boosting.ipynb).
+2. Open it in Google Colab and save a personal copy before editing.
+3. Select the free CPU runtime.
+4. Execute cells sequentially, waiting for each cell to finish.
+5. Complete the learner reflection using the new run's evidence.
+6. Run the export cell and download the evidence files.
 
-Prepared and delivered by **Meaad Al-Marri | ميعاد المري** · [Attribution and educational use](NOTICE.md).
+No paid subscription, GPU, API key, or Google Drive mount is required.
 
-The published learner release remains `v1.0.0`. This branch is the controlled bilingual candidate for `v1.1.0`.
+If the runtime restarts, rerun the prerequisite cells in order.
+Training times may change between runs; update the reflection to match
+the exported comparison table.
+
+## Repository Structure
+
+```text
+.
+├── README.md
+├── notebooks/       # Readiness and daily notebooks
+├── artifacts/       # Metrics, predictions, figures, and run evidence
+├── data/            # Synthetic course data and data contract
+├── reports/         # Project report templates and completed reports
+├── presentation/    # Presentation materials
+├── submission/      # Final prediction and manifest files
+├── tamweel/         # Project inference code
+└── scripts/         # Setup, validation, and supporting utilities
+```
+
+## Day 1 Evidence Map
+
+| Evidence | File |
+|---|---|
+| Executed notebook | [01_baseline_boosting.ipynb](notebooks/01_baseline_boosting.ipynb) |
+| Model comparison | [day1_model_comparison.csv](artifacts/day1_model_comparison.csv) |
+| Prediction evidence | [day1_comparison_predictions.csv](artifacts/day1_comparison_predictions.csv) |
+| Split membership | [day1_split_membership.csv](artifacts/day1_split_membership.csv) |
+| Learning curves | [day1_learning_curves.png](artifacts/day1_learning_curves.png) |
+| ROC and precision–recall | [day1_roc_pr.png](artifacts/day1_roc_pr.png) |
+| Written reflection | [day1_reflection.json](artifacts/day1_reflection.json) |
+| Run metadata | [day1_run.json](artifacts/day1_run.json) |
+| Environment | [environment.json](artifacts/environment.json) |
+
+## References and Attribution
+
+- Course: **SDA-DSC-211 — Advanced Machine Learning Methods**
+- Course instructor: **Meaad Al-Marri**
+- [Course template](https://github.com/almiyead-rgb/sda-dsc-211-student-template)
+- [Day 1 guide](https://github.com/almiyead-rgb/sda-dsc-211-student-template/blob/main/DAY1_GUIDE.md)
+- [SDAIA Academy on GitHub](https://github.com/SDAIAAcademy)
+
+The notebook and supporting code originate from the course template.
+Results were produced through the learner's executed Colab run.
+
+ChatGPT/Codex assistance was used to explain code and metrics, check
+artifact consistency, and draft the reflection and README wording.
