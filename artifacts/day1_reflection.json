@@ -1,0 +1,18 @@
+{
+  "problem_statement": "Estimate the probability of default within 90 days after an application, using only information available at application time. The teaching purpose is to compare three models on synthetic data and select an initial candidate, not to make real financing decisions.",
+  "candidate": "XGBoost",
+  "notes": {
+    "evidence": "XGBoost achieved the highest AP of 0.3338, compared with 0.3258 for Logistic Regression. However, the improvement was small at 0.0080. Its selection and refitting time was 0.3610 seconds, compared with 0.0386 seconds for Logistic Regression fitting. Its ROC-AUC was also lower: 0.8124 versus 0.8213.",
+    "limitation": "This comparison uses one random split, with 1,226 customers shared between the development and comparison sets. The results do not establish performance on unseen customers or future applications, or general model superiority.",
+    "next_test": "Compare the models again using customer-aware and time-aware validation. If XGBoost's AP advantage disappears, I may choose Logistic Regression for its simplicity and faster training."
+  },
+  "exit_answers": [
+    "AP should be inspected alongside ROC-AUC because defaults are uncommon. AP summarizes the trade-off between precision and recall for the positive class, while ROC-AUC summarizes ranking of positive versus negative cases.",
+    "The comparison set must remain separate from early stopping so that evaluation data does not influence tree-count selection. Using it for selection would compromise the independence of the comparison and could produce optimistic results."
+  ],
+  "checkpoint": {
+    "status": "READY_FOR_REVIEW",
+    "missing": [],
+    "automatic_grade": null
+  }
+}
