@@ -1,0 +1,14 @@
+{
+  "responses": {
+    "leak_example": "collection_calls is unavailable at application time because it records collection activity after the application. Using it would give the model information from after the prediction time.",
+    "split_reason": "Training uses past applications whose 90-day outcome windows ended strictly before validation starts. Applications whose labels mature exactly on the boundary are excluded. Every validation customer is removed from that fold's training data, leaving zero shared customers within each fold.",
+    "observed_gap": "Leaky random mean AP was 0.9988 versus 0.3110 for clean random, a reported gap of 0.6879. Honest fixed mean AP was 0.3153 versus 0.3133 for honest tuned, so tuning did not improve the outer mean AP; the rounded difference was 0.0020. These results do not prove universal superiority. Protocol comparisons combine different populations, periods and training sizes, while the fixed and tuned comparison covers only three related periods.",
+    "imputer_reason": "Imputation values must be learned from training rows only, so validation data cannot influence preprocessing. During internal tree-count selection, preprocessing and trees are fitted on inner-fit rows. Inner-stop log loss selects the tree count, then the model is refitted on the full fold-training data. Outer validation does not select these settings.",
+    "limitations": "The reserved search cohort contains only 1,935 applications and 176 defaults, with few defaults in some internal folds. The search tested eight configurations, so the selected settings may not generalize. Each honest scheme has OOF predictions for 5,039 applications: 50.39% of all rows and 100% of eligible rows. The remaining 4,961 warm-up rows have no OOF predictions. The three periods are related, and their sample SD is not a confidence interval or significance test. This is synthetic-data validation, not an independent final test or proof of fairness, calibration or operational value."
+  },
+  "checkpoint": {
+    "status": "READY_FOR_REVIEW",
+    "missing": [],
+    "automatic_grade": null
+  }
+}
