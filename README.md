@@ -1,3 +1,5 @@
+<!-- BILINGUAL:EN -->
+
 # Tamweel Lite — Financing Default Risk
 
 An educational machine learning project for estimating the probability
@@ -24,6 +26,8 @@ available at application time.
 - [Day 2 results | نتائج اليوم الثاني](artifacts/validation_summary.csv)
 - [Day 2 reflection | تفسير اليوم الثاني](artifacts/day2_reflection.json)
 - [Project progress | تقدم المشروع](#project-progress)
+
+<!-- BILINGUAL:AR -->
 
 مشروع تعليمي لتقدير احتمال التعثر خلال 90 يومًا باستخدام معلومات وقت تقديم الطلب.
 اكتمل اليوم الأول والثاني، وبقية الأيام مخططة. البيانات اصطناعية والنتائج لا تصلح
